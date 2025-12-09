@@ -1,116 +1,107 @@
-# Many-to-many Object Relationships Lab
+# Book–Author–Contract System
 
-Now that we have learned about several types of relationships it's time to build 
-one of our own. In this lab you will be creating a many-to many relationship in 
-python 
+A Python object-oriented model demonstrating many-to-many relationships using three core classes: Author, Book, and Contract.
+This system is designed to show how objects can relate to one another through an intermediary class while enforcing data validation through properties.
 
-## The Scenario 
+## Overview
 
-We are tasked with building a model to aid in building contracts for books with 
-multiple authors. As a part of this model we need to create an Author model, a Book 
-model and a Contract model. Authors can have many books through contracts, and books 
-can have many authors through contacts.
+This project models a publishing environment where:
 
-## Tools & Resources 
-- [Github Repo](https://github.com/learn-co-curriculum/python-oo-many-to-many-book-contracts-lab)
-- [Python classes](https://docs.python.org/3/tutorial/classes.html)
+- Authors can sign multiple contracts for different books.
+- Books can have multiple authors associated with them through those contracts.
+- Contracts serve as the linking object, storing information such as contract date and royalties.
+- The system uses class-level tracking, property validation, and intermediary lookup methods to demonstrate common OO patterns used in Python.
 
-## Instructions
+## Class Structure
+### 1. Author
 
-### Task 1: Define the Problem
+Represents a writer who may have one or more contracts with various books.
 
-Build a model a many to many relationship between Books and Authors:
+#### Key Features:
 
-* Build Book class
-* Build Author class
-* Build Contract class
-* Build connecting methods between all
+- Tracks all Author instances via Author.all
+- Looks up related contracts and books via helper methods
+- Can sign new contracts
+- Computes total royalties earned
 
-### Task 2: Determine the Design
+#### Methods
+|Method |	Purpose |
+|:------|:--------|
+|contracts()|	Returns all Contract instances belonging to this author.
+|books()|	Returns all Book instances associated with this author through contracts.
+|sign_contract(book, date, royalties)|	Creates and returns a new Contract with this author.
+|total_royalties()|	Sums all royalties across the author's contracts.
 
-#### Book:
-* Attributes:
-  * title (string)
-  * all (array) 
-* Methods:
-  * contracts()
-  * authors()
+### 2. Book
 
-#### Authors:
-* Attributes:
-  * name (string)
-  * all (array)
-* Methods:
-  * contracts()
-  * books()
-  * sign_contracts(book,date,royalties)
-  * total_royalties()
+Represents a published work that may have multiple contracts with different authors.
 
-#### Contracts:
-* Attributes:
-  * author (Author class), 
-  * book (Book class), 
-  * date (string), 
-  * royalties (integer)
-  * all (array)
-* Methods:
-  * contracts_by_date()
+#### Key Features
 
-### Task 3: Develop, Test, and Refine the Code
+- Tracks all Book instances via Book.all
+- Can look up authors associated through Contract objects
+- Mirrors the Author class’s relationship methods
 
-#### Step 1: Create feature branch
+#### Methods
+|Method |	Purpose |
+|:------|:--------|
+|contracts()|	Returns all Contract instances associated with this book.
+|authors()|	Returns all Author instances linked to this book through contracts.
 
-#### Step 2: Create Book class
+### 3. Contract
 
-* `__init__`: title
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * authors()- This method should return a list of related authors using the Contract class as an intermediary
+The intermediary object linking Authors and Books.
+Each Contract stores metadata such as date and royalties and enforces strict validation.
 
-#### Step 3: Authors
+#### Key Features
 
-* `__init__`: name (string)
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * books()- This method should return a list of related books using the Contract class as an intermediary
-  * sign_contracts(book,date,royalties)- This method should create and return a new Contract object between the author and the specified book with the specified date and royalties
-  * total_royalties()- This method should return the total amount of royalties that the author has earned from all of their contracts
+- Tracks all Contract instances via Contract.all
+- Enforces data integrity using property setters
+- Provides class-level lookup by date
 
-#### Step 4: Contracts
+#### Properties (Validated)
+|Property	|Type| Required	Validation|
+|:--------|:--:|:-------------------|
+|author	  |Author| instance	Raises TypeError if not an Author
+|book	    |Book |instance	Raises TypeError if not a Book
+|date     |str	|Must be a string
+|royalties|int|	Must be an integer
 
-* `__init__`:
-  * author
-  * book
-  * date 
-  * royalties 
-* Class attributes: all
-* Properties: All properties should raise an exception if not valid
-  * author: Is an instance of Author class
-  * book:  Is an instance of Book class
-  * date: Is an instance of a str
-  * royalties:  Is an instance of an int
-* Class Methods: contracts_by_date()- This method should return all contracts that have the same date as the date passed into the method
+Methods
+|Method |	Purpose |
+|:------|:--------|
+|contracts_by_date(date) (class method)	| Returns all Contracts matching a given date string.
 
-#### Step 6: Push feature branch and open a PR on GitHub
 
-#### Step 7: Merge to main
+## Core Concepts Demonstrated
+✔ Many-to-Many Relationships
 
-### Task 4: Document and Maintain
+Authors ↔ Contracts ↔ Books, with the Contract class acting as the intermediary.
 
-Best Practice documentation steps:
-* Add comments to the code to explain purpose and logic, clarifying intent and functionality of your code to other developers.
-* Update README text to reflect the functionality of the application following https://makeareadme.com. 
-  * Add screenshot of completed work included in Markdown in README.
-* Delete any stale branches on GitHub
-* Remove unnecessary/commented out code
-* If needed, update git ignore to remove sensitive data
+✔ Class Attributes for Global Tracking
 
-## Important Submission Note
+Each class maintains an .all list storing all instances for lookup.
 
-Before you submit your solution, you need to save your progress with git.
+✔ Data Validation Using Properties
 
-* Add your changes to the staging area by executing git add .
-* Create a commit by executing git commit -m "Your commit message"
-* Push your commits to GitHub by executing git push origin main
+Contract attributes enforce correct types, preventing invalid relationships or data.
+
+✔ Helper Methods for Relationship Navigation
+
+Methods like books(), authors(), and total_royalties() allow intuitive interaction with related data.
+
+📌 Summary
+
+This project provides a clear demonstration of:
+
+Object composition
+
+Many-to-many modeling in Python
+
+Class-level tracking
+
+Property-based validation
+
+Relationship lookup methods
+
+It serves as a solid architecture example for systems involving linked object sets such as publishing, inventory, employee/project matching, or student/course enrollment.
